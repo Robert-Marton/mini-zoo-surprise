@@ -873,10 +873,14 @@
       <h3>🎁 Ráadás</h3>
       <img id="bonusImage" src="bonus.jpg" alt="Ráadás kép">
       <button id="bonusClose" class="bonusClose">Bezárás</button>
+      <button onclick="window.location.reload()" class="bonusClose">
+  ↻ Újrakezdés
+</button>
     </div>
   </div>
 
 <script>
+  history.scrollRestoration = 'manual';
   const state = {tree:false, water:false, shelter:false};
   let completed = 0;
 
