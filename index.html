@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mini Zoo Surprise</title>
+<style>
+  :root{
+    --bg:#eef3ea;
+    --card:#fbfaf5;
+    --panel:#f5f2e7;
+    --line:#d9d2bf;
+    --text:#223127;
+    --muted:#66766b;
+    --green:#6d9a62;
+    --green-dark:#4f7550;
+    --gold:#cda85d;
+    --path:#d6bf96;
+    --grass1:#8eba79;
+    --grass2:#75a864;
+    --wood1:#8b6848;
+    --wood2:#6d5036;
+    --shadow:0 18px 50px rgba(29,41,31,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:
+      radial-gradient(circle at top left, #f7fbf5 0, #eef3ea 38%, #e8eee3 100%);
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  body{min-height:100vh}
+  .page{
+    width:min(1040px, 94vw);
+    margin:24px auto 36px;
+  }
+  .app{
+    background:rgba(251,250,245,.96);
+    border:1px solid rgba(255,255,255,.75);
+    border-radius:28px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 18px;
+    background:linear-gradient(180deg, #f7f4eb, #f2eee2);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    display:flex;align-items:center;gap:12px;
+  }
+  .logo{
+    width:42px;height:42px;border-radius:14px;
+    background:linear-gradient(145deg, #759e67, #537850);
+    color:white;display:grid;place-items:center;
+    font-size:22px;box-shadow:0 8px 18px rgba(70,100,71,.22);
+  }
+  .brand h1{
+    margin:0;font-size:18px;letter-spacing:.02em;
+  }
+  .brand p{
+    margin:2px 0 0;color:var(--muted);font-size:13px;
+  }
+  .pill{
+    padding:8px 12px;
+    border-radius:999px;
+    background:white;
+    border:1px solid var(--line);
+    font-weight:700;
+    font-size:13px;
+    color:var(--green-dark);
+  }
+
+  .hero{
+    display:grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap:18px;
+    padding:18px;
+    border-bottom:1px solid var(--line);
+  }
+  .heroBox{
+    background:linear-gradient(180deg, #fdfcf8, #f8f5ec);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:22px;
+  }
+  .heroBox h2{
+    margin:0;
+    font-size:clamp(28px, 4.3vw, 42px);
+    letter-spacing:-.03em;
+    line-height:1.02;
+  }
+  .heroBox p{
+    margin:12px 0 0;
+    color:var(--muted);
+    font-size:16px;
+    max-width:52ch;
+  }
+  .heroNote{
+    display:grid;place-items:center;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(255,255,255,.55), transparent 18%),
+      linear-gradient(180deg, #edf5e8, #e0edd8);
+    border:1px solid #d4e1cc;
+    border-radius:22px;
+    padding:18px;
+    text-align:center;
+  }
+  .heroNote .animal{
+    font-size:64px;
+    line-height:1;
+    filter:drop-shadow(0 10px 16px rgba(0,0,0,.14));
+  }
+  .heroNote strong{
+    display:block;margin-top:10px;font-size:20px;
+  }
+  .heroNote span{
+    display:block;margin-top:6px;color:var(--muted);
+  }
+
+  .highlight-wrap{
+    padding:0 18px 0;
+  }
+  .highlight-wrap .panel{
+    width:100%;
+  }
+  @media (max-width:640px){
+    .highlight-wrap{
+      padding:0 12px 0;
+    }
+  }
+
+.main{
+    display:grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px,.65fr);
+    gap:18px;
+    padding:18px;
+  }
+
+  .park{
+    border-radius:24px;
+    overflow:hidden;
+    border:1px solid #cfdcc9;
+    background:
+      linear-gradient(180deg, #dcecf1 0 22%, transparent 22% 100%),
+      linear-gradient(180deg, #a8d39a 22% 72%, #d9c093 72% 100%);
+    min-height:560px;
+    position:relative;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.4);
+  }
+  .sun{
+    position:absolute;right:28px;top:22px;
+    width:64px;height:64px;border-radius:50%;
+    background:#ffe18a;
+    box-shadow:0 0 35px rgba(255,225,138,.5);
+  }
+  .cloud{
+    position:absolute;
+    background:rgba(255,255,255,.9);
+    border-radius:999px;
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,.04));
+  }
+  .cloud:before,.cloud:after{
+    content:"";position:absolute;background:inherit;border-radius:999px;
+  }
+  .cloud.one{width:84px;height:28px;left:34px;top:38px}
+  .cloud.one:before{width:28px;height:28px;left:10px;top:-10px}
+  .cloud.one:after{width:34px;height:34px;left:36px;top:-14px}
+  .cloud.two{width:72px;height:24px;left:132px;top:78px;opacity:.92}
+  .cloud.two:before{width:24px;height:24px;left:9px;top:-8px}
+  .cloud.two:after{width:28px;height:28px;left:30px;top:-12px}
+
+  .parkLabel{
+    position:absolute;left:18px;top:18px;
+    padding:8px 12px;border-radius:999px;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(0,0,0,.06);
+    font-size:13px;font-weight:700;color:#526256;
+  }
+
+  .enclosure{
+    position:absolute;
+    z-index:2;
+    left:50%; top:54%;
+    transform:translate(-50%,-50%);
+    width:min(640px, 88%);
+    height:330px;
+    border-radius:30px;
+    background:
+      radial-gradient(circle at 14% 22%, rgba(255,255,255,.12), transparent 12%),
+      radial-gradient(circle at 74% 30%, rgba(255,255,255,.14), transparent 14%),
+      linear-gradient(180deg, var(--grass1), var(--grass2));
+    border:8px solid #7f6448;
+    box-shadow:
+      inset 0 0 0 5px rgba(255,255,255,.1),
+      0 12px 22px rgba(0,0,0,.08);
+  }
+  .enclosure:before{
+    content:"";
+    position:absolute;left:18px;right:18px;bottom:14px;height:12px;
+    border-radius:999px;
+    background:repeating-linear-gradient(90deg, #6b5138 0 10px, #8d6c4b 10px 19px);
+    opacity:.75;
+  }
+
+  .path{
+    position:absolute;
+    z-index:1;
+    left:0;right:0;bottom:0;height:130px;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,.1), transparent 22%),
+      linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.08)),
+      linear-gradient(180deg, #dcc59d, #d0b487);
+  }
+
+  .item{
+    position:absolute;
+    opacity:0;
+    transform:translateY(18px) scale(.72);
+    transition:.42s ease;
+    filter:drop-shadow(0 10px 14px rgba(0,0,0,.15));
+  }
+  .item.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+  /* Tree */
+  .tree{
+    left:58px;top:56px;width:92px;height:130px;
+  }
+  .tree .trunk{
+    position:absolute;left:36px;bottom:0;width:20px;height:52px;
+    background:linear-gradient(180deg, #845e3c, #6f4e30);
+    border-radius:10px;
+  }
+  .tree .leaf1,.tree .leaf2,.tree .leaf3{
+    position:absolute;border-radius:50%;
+    background:linear-gradient(180deg, #83b36f, #66965b);
+  }
+  .tree .leaf1{width:62px;height:62px;left:4px;top:16px}
+  .tree .leaf2{width:64px;height:64px;left:28px;top:0}
+  .tree .leaf3{width:54px;height:54px;left:22px;top:34px}
+
+  /* Water */
+  .water{
+    left:250px;bottom:44px;width:104px;height:62px;
+  }
+  .water .bowl{
+    position:absolute;left:4px;right:4px;bottom:0;height:32px;
+    background:linear-gradient(180deg, #9aa4ab, #77818a);
+    border-radius:999px;
+  }
+  .water .liquid{
+    position:absolute;left:16px;right:16px;bottom:14px;height:20px;
+    background:linear-gradient(180deg, #8ed6f5, #58bfe9);
+    border-radius:999px;
+    box-shadow: inset 0 3px 0 rgba(255,255,255,.35);
+  }
+
+  /* Shelter */
+  .shelter{
+    right:44px;bottom:44px;width:130px;height:92px;
+  }
+  .shelter .roof{
+    position:absolute;left:8px;right:8px;top:0;height:34px;
+    background:linear-gradient(180deg, #946d49, #735236);
+    clip-path:polygon(50% 0%, 100% 100%, 0% 100%);
+  }
+  .shelter .base{
+    position:absolute;left:18px;right:18px;bottom:0;height:62px;
+    border-radius:8px 8px 16px 16px;
+    background:linear-gradient(180deg, #b89168, #9d754d);
+  }
+  .shelter .door{
+    position:absolute;left:46px;bottom:0;width:38px;height:36px;
+    border-radius:18px 18px 6px 6px;
+    background:#6c4f36;
+  }
+
+  .animal{
+    position:absolute;
+    left:50%;top:48%;
+    transform:translate(-50%,-50%) scale(.5);
+    opacity:0;
+    transition:.55s cubic-bezier(.2,.9,.2,1.2);
+    z-index:4;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    filter:drop-shadow(0 12px 14px rgba(0,0,0,.16));
+  }
+  .animal.show{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  .animalPhoto{
+    width:156px;
+    height:156px;
+    padding:8px;
+    border-radius:24px;
+    background:rgba(255,255,255,.96);
+    border:3px solid rgba(90,117,80,.18);
+    box-shadow:0 12px 22px rgba(0,0,0,.16);
+  }
+  .animalPhoto img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center center;
+    display:block;
+    border-radius:18px;
+  }
+  .animalTag{
+    background:rgba(255,255,255,.92);
+    color:#435447;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius:999px;
+    padding:7px 12px;
+    font-size:13px;
+    font-weight:800;
+    white-space:nowrap;
+  }
+
+  .crate{
+    position:absolute;
+    left:50%; bottom:32px;
+    width:96px;height:78px;
+    transform:translateX(-50%) scale(.72);
+    opacity:0;
+    transition:.42s ease;
+    z-index:10;
+    cursor:pointer;
+    display:none;
+  }
+  .crate.show{
+    display:block;
+    opacity:1;
+    transform:translateX(-50%) scale(1);
+  }
+  .crate .box{
+    position:absolute;inset:0;
+    border-radius:14px;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,0)),
+      linear-gradient(180deg, #c89d62, #af8350);
+    border:2px solid #8c6539;
+    box-shadow:0 10px 16px rgba(0,0,0,.16);
+  }
+  .crate .box:before{
+    content:"";
+    position:absolute;left:44px;top:0;bottom:0;width:8px;
+    background:#9b7345;
+  }
+  .crate .box:after{
+    content:"";
+    position:absolute;left:0;right:0;top:28px;height:8px;
+    background:#9b7345;
+  }
+  .crate .label{
+    position:absolute;
+    left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    font-size:11px;font-weight:800;
+    color:#5f4427;
+    letter-spacing:.08em;
+    background:rgba(255,244,225,.85);
+    padding:5px 7px;border-radius:8px;
+  }
+
+  .gift{
+    position:absolute;
+    left:50%; top:50%;
+    width:112px;height:112px;
+    transform:translate(-50%,-50%) scale(.68);
+    opacity:0;
+    transition:.45s cubic-bezier(.2,.9,.2,1.2);
+    z-index:20;
+    cursor:pointer;
+    display:none;
+    filter:drop-shadow(0 16px 18px rgba(0,0,0,.18));
+  }
+  .gift.show{
+    display:block;
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  .gift .gbox{
+    position:absolute;left:10px;right:10px;bottom:0;height:78px;
+    border-radius:14px;
+    background:linear-gradient(180deg, #f0b4c0, #df8fa0);
+  }
+  .gift .lid{
+    position:absolute;left:0;right:0;top:24px;height:26px;
+    border-radius:14px;
+    background:linear-gradient(180deg, #f5c3ce, #e8a7b6);
+  }
+  .gift .v, .gift .h, .gift .bow1, .gift .bow2{
+    position:absolute;background:#d25574;
+  }
+  .gift .v{left:50px;top:24px;width:12px;height:88px;border-radius:999px}
+  .gift .h{left:10px;right:10px;top:50px;height:12px;border-radius:999px}
+  .gift .bow1, .gift .bow2{
+    width:26px;height:20px;top:8px;border-radius:999px 999px 0 999px;
+  }
+  .gift .bow1{left:34px;transform:rotate(-28deg)}
+  .gift .bow2{right:34px;transform:scaleX(-1) rotate(-28deg)}
+
+  .side{
+    display:flex;flex-direction:column;gap:16px;
+  }
+  .panel{
+    background:linear-gradient(180deg, #fbfaf5, #f6f2e8);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:16px;
+  }
+.panel.highlight{
+    background:linear-gradient(180deg, #fff8e8, #fff2cf);
+    border:4px solid #e2a93e;
+    box-shadow:0 10px 26px rgba(205,168,93,.18);
+  }
+  .panel.highlight h3{
+    font-size:24px;
+    margin-bottom:10px;
+    color:#7a5a1e;
+  }
+  .panel.highlight p{
+    font-size:18px;
+    line-height:1.5;
+    color:#5a5038;
+    font-weight:700;
+  }
+  .panel h3{
+    margin:0 0 6px;font-size:18px;
+  }
+  .panel p{
+    margin:0;color:var(--muted);font-size:14px;line-height:1.45;
+  }
+  .tasks{
+    display:grid;
+    gap:10px;
+    margin-top:14px;
+  }
+  button.task{
+    border:1px solid #d9d2bf;
+    background:white;
+    border-radius:16px;
+    padding:14px 14px;
+    text-align:left;
+    display:flex;align-items:center;gap:12px;
+    font:inherit;color:var(--text);font-weight:700;
+    cursor:pointer;
+    transition:.18s ease;
+    box-shadow:0 6px 14px rgba(37,54,41,.05);
+  }
+  button.task:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(37,54,41,.08)}
+  button.task:disabled{opacity:.55;cursor:default;transform:none;box-shadow:0 6px 14px rgba(37,54,41,.05)}
+  .iconBubble{
+    width:42px;height:42px;border-radius:14px;
+    display:grid;place-items:center;
+    background:#edf5ea;color:var(--green-dark);
+    font-size:20px;flex:0 0 auto;
+  }
+  .task small{
+    display:block;
+    color:var(--muted);
+    font-weight:600;
+    font-size:12px;
+    margin-top:2px;
+  }
+
+  .progressBox{
+    margin-top:14px;
+  }
+  .progressHead{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:14px;font-weight:800;color:#4f6354;
+    margin-bottom:8px;
+  }
+  .progress{
+    height:12px;border-radius:999px;
+    background:#e6ebdf;
+    overflow:hidden;
+  }
+  .bar{
+    width:0%;height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, #8bb579, #5e9157);
+    transition:.35s ease;
+  }
+  .status{
+    margin-top:12px;
+    min-height:56px;
+    border-radius:16px;
+    background:#fffdf8;
+    border:1px solid #e2dac7;
+    padding:12px 14px;
+    color:#536457;
+    font-weight:700;
+    line-height:1.4;
+  }
+
+  .overlay{
+    position:fixed;inset:0;
+    display:grid;place-items:center;
+    background:rgba(17,25,18,.76);
+    z-index:100;
+    opacity:0;pointer-events:none;
+    transition:.55s ease;
+    overflow:hidden;
+  }
+  .overlay.show{
+    opacity:1;pointer-events:auto;
+  }
+  .final{
+    position:relative;z-index:2;
+    text-align:center;
+    color:white;
+    padding:20px;
+    animation:pop .7s ease both;
+  }
+  .final .subpill{
+    display:inline-block;
+    padding:8px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08);
+    backdrop-filter: blur(8px);
+    font-weight:800;
+    margin-bottom:16px;
+  }
+  .final h2{
+    margin:0;
+    font-size:clamp(42px, 8vw, 92px);
+    line-height:.94;
+    letter-spacing:-.04em;
+    text-shadow:0 10px 30px rgba(0,0,0,.24);
+  }
+  .birthdayLine,
+  .birthdayName{
+    display:block;
+  }
+  .birthdayLine{
+    white-space:nowrap;
+    font-size:clamp(30px, 6.2vw, 76px);
+  }
+  .birthdayName{
+    margin-top:10px;
+    font-size:clamp(46px, 9vw, 98px);
+  }
+
+.final p{
+    margin:16px auto 0;
+    max-width:760px;
+    font-size:clamp(18px, 3vw, 28px);
+    line-height:1.35;
+  }
+  .final .tiny{
+    font-size:14px;
+    opacity:.86;
+    max-width:640px;
+  }
+
+  .bonusGift{
+    margin:28px auto 0;
+    width:118px;height:118px;
+    position:relative;
+    cursor:pointer;
+    opacity:0;
+    transform:translateY(18px) scale(.72);
+    pointer-events:none;
+    transition:.55s cubic-bezier(.2,.9,.2,1.15);
+    filter:drop-shadow(0 12px 16px rgba(0,0,0,.24));
+  }
+  .bonusGift.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+  }
+  .bonusGift:hover{transform:translateY(-3px) scale(1.05)}
+  .bonusGift .bonusBox{
+    position:absolute;left:12px;right:12px;bottom:0;height:78px;
+    border-radius:14px;
+    background:linear-gradient(180deg,#ffd477,#e8aa3e);
+    border:2px solid rgba(119,80,17,.35);
+  }
+  .bonusGift .bonusLid{
+    position:absolute;left:3px;right:3px;top:28px;height:27px;
+    border-radius:13px;
+    background:linear-gradient(180deg,#ffe19a,#efb84e);
+    border:2px solid rgba(119,80,17,.25);
+    z-index:2;
+  }
+  .bonusGift .bonusRibbonV{
+    position:absolute;left:52px;top:28px;width:14px;height:90px;
+    border-radius:8px;background:#d95767;z-index:3;
+  }
+  .bonusGift .bonusRibbonH{
+    position:absolute;left:12px;right:12px;top:53px;height:13px;
+    background:#d95767;z-index:3;
+  }
+  .bonusGift .bonusBow1,.bonusGift .bonusBow2{
+    position:absolute;top:5px;width:31px;height:25px;
+    background:#d95767;border-radius:18px 18px 4px 18px;z-index:4;
+  }
+  .bonusGift .bonusBow1{left:29px;transform:rotate(-22deg)}
+  .bonusGift .bonusBow2{right:29px;transform:scaleX(-1) rotate(-22deg)}
+  .bonusGift .bonusLabel{
+    position:absolute;left:50%;bottom:20px;transform:translateX(-50%);
+    z-index:5;background:rgba(255,255,255,.94);color:#7b4d08;
+    border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;
+    letter-spacing:.08em;white-space:nowrap;box-shadow:0 4px 10px rgba(0,0,0,.12);
+  }
+  .bonusOverlay{
+    position:fixed;inset:0;z-index:200;display:grid;place-items:center;
+    padding:20px;background:rgba(12,18,13,.88);
+    opacity:0;pointer-events:none;transition:.4s ease;
+  }
+  .bonusOverlay.show{opacity:1;pointer-events:auto}
+  .bonusCard{
+    position:relative;width:min(760px,94vw);max-height:90vh;
+    display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px;
+    border-radius:24px;background:#fffdf8;box-shadow:0 24px 70px rgba(0,0,0,.34);
+    transform:scale(.88);transition:.42s cubic-bezier(.2,.9,.2,1.1);
+  }
+  .bonusOverlay.show .bonusCard{transform:scale(1)}
+  .bonusCard h3{margin:0;font-size:26px;color:#3e503f}
+  .bonusCard img{
+    display:block;max-width:100%;max-height:70vh;object-fit:contain;
+    border-radius:16px;background:#eee;
+  }
+  .bonusClose{
+    border:0;border-radius:999px;padding:10px 16px;background:#5e9157;
+    color:white;font:inherit;font-weight:800;cursor:pointer;
+  }
+
+  .confetti{
+    position:absolute;
+    top:-26px;
+    width:12px;height:18px;border-radius:3px;
+    animation:fall linear forwards;
+  }
+  .firework{
+    position:absolute;
+    width:10px;height:10px;border-radius:50%;
+    background:white;
+    box-shadow:
+      0 -72px 0 #ffd166,
+      50px -50px 0 #ff7b7b,
+      72px 0 0 #72d8f3,
+      50px 50px 0 #baa0ff,
+      0 72px 0 #83e68a,
+      -50px 50px 0 #ffb54a,
+      -72px 0 0 #ff7dc4,
+      -50px -50px 0 #8df1dc;
+    animation:boom 1.35s ease-out infinite;
+    opacity:.9;
+  }
+
+  @keyframes fall{
+    to{transform:translateY(112vh) rotate(720deg)}
+  }
+  @keyframes boom{
+    0%{transform:scale(.1);opacity:0}
+    28%{opacity:1}
+    100%{transform:scale(1.25);opacity:0}
+  }
+  @keyframes pop{
+    from{transform:scale(.82);opacity:0}
+    to{transform:scale(1);opacity:1}
+  }
+
+  @media (max-width: 900px){
+    .hero{grid-template-columns:1fr}
+    .main{grid-template-columns:1fr}
+    .park{min-height:500px}
+  }
+  @media (max-width: 640px){
+    .page{width:96vw;margin:14px auto 28px}
+    .topbar{padding:12px}
+    .logo{width:38px;height:38px;border-radius:12px}
+    .hero,.main{padding:12px;gap:12px}
+    .heroBox,.heroNote,.panel{padding:14px}
+    .park{min-height:470px}
+    .enclosure{height:286px; top:55%}
+    .tree{left:26px;top:54px;transform:scale(.88);transform-origin:left top}
+    .water{left:40%;bottom:40px;transform:translateX(-50%) scale(.88)}
+    .shelter{right:16px;bottom:42px;transform:scale(.86);transform-origin:right bottom}
+    .animalPhoto{width:128px;height:128px}.animalTag{font-size:12px;padding:6px 10px}
+    .crate{bottom:24px}
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="app">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">🐾</div>
+          <div>
+            <h1>Mini Zoo Surprise</h1>
+            <p>Egy rövid állatkerti küldetés – különleges fináléval.</p>
+          </div>
+        </div>
+        <div class="pill">Új érkező előkészítése</div>
+      </div>
+
+      <section class="hero">
+        <div class="heroBox">
+          <h2>Készítsd elő az új kifutót!</h2>
+          <p>
+            Egy új lakó hamarosan megérkezik. Tedd kényelmessé a kifutót:
+            ültess egy fát, készíts itatót és helyezz el egy búvóhelyet.
+          </p>
+        </div>
+        <div class="heroNote">
+          <div class="animal">🐼</div>
+          <strong>Mai küldetés</strong>
+          <span>3 gyors lépés, majd megérkezik a meglepetés.</span>
+        </div>
+      </section>
+
+      <div class="highlight-wrap">
+        <div class="panel highlight">
+          <h3>Kis emlékeztető</h3>
+          <p>
+            Ha a kifutó elkészült, megérkezik az új lakó. Ezután figyeld a következő
+            szállítmányt is… ott vár a valódi meglepetés. 🎁
+          </p>
+        </div>
+      </div>
+
+      <section class="main">
+        <div class="park">
+          <div class="sun"></div>
+          <div class="cloud one"></div>
+          <div class="cloud two"></div>
+          <div class="parkLabel">South Habitat Zone</div>
+
+          <div class="enclosure">
+            <div id="tree" class="item tree">
+              <div class="leaf1"></div>
+              <div class="leaf2"></div>
+              <div class="leaf3"></div>
+              <div class="trunk"></div>
+            </div>
+
+            <div id="water" class="item water">
+              <div class="bowl"></div>
+              <div class="liquid"></div>
+            </div>
+
+            <div id="shelter" class="item shelter">
+              <div class="roof"></div>
+              <div class="base"></div>
+              <div class="door"></div>
+            </div>
+
+            <div id="animal" class="animal">
+              <div class="animalPhoto">
+                <img
+                  id="pandaImg"
+                  src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Panda_National_Zoo.jpg"
+                  alt="Kölyök panda"
+                >
+              </div>
+              <div class="animalTag">Új lakó: kölyök panda</div>
+            </div>
+          </div>
+
+          <div id="crate" class="crate" title="Nyisd ki!">
+            <div class="box"></div>
+            <div class="label">ARRIVAL</div>
+          </div>
+
+          <div id="gift" class="gift" title="Nyisd ki!">
+            <div class="lid"></div>
+            <div class="gbox"></div>
+            <div class="v"></div>
+            <div class="h"></div>
+            <div class="bow1"></div>
+            <div class="bow2"></div>
+          </div>
+
+          <div class="path"></div>
+        </div>
+
+        <aside class="side">
+          <div class="panel">
+            <h3>Kezelési panel</h3>
+            <p>
+              Ez csak egy mini küldetés, szóval semmi bonyolult:
+              kattints végig a három feladaton, aztán fogadd az új érkezőt.
+            </p>
+
+            <div class="tasks">
+              <button id="treeBtn" class="task">
+                <div class="iconBubble">🌳</div>
+                <div>
+                  Ültess egy fát
+                  <small>árnyék és természetesebb kifutó</small>
+                </div>
+              </button>
+
+              <button id="waterBtn" class="task">
+                <div class="iconBubble">💧</div>
+                <div>
+                  Készíts itatót
+                  <small>friss víz az új lakónak</small>
+                </div>
+              </button>
+
+              <button id="shelterBtn" class="task">
+                <div class="iconBubble">🏠</div>
+                <div>
+                  Helyezz el búvóhelyet
+                  <small>egy kis nyugodt kuckó</small>
+                </div>
+              </button>
+            </div>
+
+            <div class="progressBox">
+              <div class="progressHead">
+                <span>Előkészítés állapota</span>
+                <span id="progressText">0 / 3</span>
+              </div>
+              <div class="progress">
+                <div id="bar" class="bar"></div>
+              </div>
+            </div>
+
+            <div id="status" class="status">
+              Kezdhetjük! Készítsd el a kifutót az új lakó számára.
+            </div>
+          </div>
+
+        </aside>
+      </section>
+    </div>
+  </div>
+
+  <div id="overlay" class="overlay">
+    <div class="final">
+      <div class="subpill">Küldetés teljesítve</div>
+      <h2>
+        <span class="birthdayLine">🎉 Boldog születésnapot 🎉</span>
+        <span class="birthdayName">Vanessza!</span>
+      </h2>
+      <p>Az állatkert elkészült, a gondozó jutalma pedig megérkezett. 🎁</p>
+      <p class="tiny">
+        Idén nem lettél elfelejtve, legyen szép napod!
+      </p>
+
+      <div id="bonusGift" class="bonusGift" title="Ráadás">
+        <div class="bonusLid"></div>
+        <div class="bonusBox"></div>
+        <div class="bonusRibbonV"></div>
+        <div class="bonusRibbonH"></div>
+        <div class="bonusBow1"></div>
+        <div class="bonusBow2"></div>
+        <div class="bonusLabel">RÁADÁS</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bonusOverlay" class="bonusOverlay">
+    <div class="bonusCard">
+      <h3>🎁 Ráadás</h3>
+      <img id="bonusImage" src="bonus.jpg" alt="Ráadás kép">
+      <button id="bonusClose" class="bonusClose">Bezárás</button>
+    </div>
+  </div>
+
+<script>
+  const state = {tree:false, water:false, shelter:false};
+  let completed = 0;
+
+  const statusEl = document.getElementById('status');
+  const progressText = document.getElementById('progressText');
+  const bar = document.getElementById('bar');
+  const crate = document.getElementById('crate');
+  const gift = document.getElementById('gift');
+  const overlay = document.getElementById('overlay');
+  const bonusGift = document.getElementById('bonusGift');
+  const bonusOverlay = document.getElementById('bonusOverlay');
+  const bonusClose = document.getElementById('bonusClose');
+  const bonusImage = document.getElementById('bonusImage');
+  const animal = document.getElementById('animal');
+  const pandaImg = document.getElementById('pandaImg');
+
+  pandaImg.addEventListener('error', () => {
+    const photo = animal.querySelector('.animalPhoto');
+    photo.innerHTML = '<div style="width:100%;height:100%;display:grid;place-items:center;font-size:72px;border-radius:18px;background:linear-gradient(180deg,#f6f6f6,#ececec)">🐼</div>';
+  });
+
+  function updateProgress(){
+    progressText.textContent = completed + ' / 3';
+    bar.style.width = (completed / 3 * 100) + '%';
+  }
+
+  function addItem(key, btnId, itemId, message){
+    if(state[key]) return;
+    state[key] = true;
+    completed += 1;
+    document.getElementById(itemId).classList.add('show');
+    document.getElementById(btnId).disabled = true;
+    statusEl.textContent = message;
+    updateProgress();
+    checkReady();
+  }
+
+  function checkReady(){
+    if(completed === 3){
+      statusEl.textContent = 'A kifutó elkészült! Már csak az új lakó hiányzik…';
+      setTimeout(() => {
+        crate.classList.add('show');
+      }, 700);
+    }
+  }
+
+  document.getElementById('treeBtn').addEventListener('click', () => {
+    addItem('tree', 'treeBtn', 'tree', 'Nagyszerű! A fa már a helyén van. 🌿');
+  });
+
+  document.getElementById('waterBtn').addEventListener('click', () => {
+    addItem('water', 'waterBtn', 'water', 'Tökéletes, az itató is elkészült. 💧');
+  });
+
+  document.getElementById('shelterBtn').addEventListener('click', () => {
+    addItem('shelter', 'shelterBtn', 'shelter', 'Szuper, a búvóhely is kész. 🏡');
+  });
+
+  crate.addEventListener('click', () => {
+    crate.classList.remove('show');
+    animal.classList.add('show');
+    statusEl.textContent = 'Megérkezett az új lakó, egy aranyos kölyök panda! 🐼';
+    setTimeout(() => {
+      statusEl.textContent = 'Új szállítmány érkezett… ez viszont nem az állatkertnek szól.';
+      gift.classList.add('show');
+    }, 2400);
+  });
+
+  gift.addEventListener('click', () => {
+    gift.classList.remove('show');
+    overlay.classList.add('show');
+    makeConfetti();
+    makeFireworks();
+
+    setTimeout(() => {
+      bonusGift.classList.add('show');
+    }, 1700);
+  });
+
+  bonusGift.addEventListener('click', () => {
+    bonusOverlay.classList.add('show');
+  });
+
+  bonusClose.addEventListener('click', () => {
+    bonusOverlay.classList.remove('show');
+  });
+
+  bonusOverlay.addEventListener('click', (event) => {
+    if(event.target === bonusOverlay){
+      bonusOverlay.classList.remove('show');
+    }
+  });
+
+  bonusImage.addEventListener('error', () => {
+    bonusImage.alt = 'A ráadás kép még nincs bemásolva. Nevezd el bonus.jpg-nek.';
+    bonusImage.style.minHeight = '260px';
+    bonusImage.style.padding = '30px';
+  });
+
+  function makeConfetti(){
+    const colors = ['#ffd166','#ff7b7b','#72d8f3','#baa0ff','#83e68a','#ffb54a','#ff7dc4','#8df1dc'];
+    for(let i=0;i<120;i++){
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDuration = (2.7 + Math.random() * 2.6) + 's';
+      c.style.animationDelay = (Math.random() * .8) + 's';
+      c.style.transform = 'rotate(' + (Math.random()*180) + 'deg)';
+      overlay.appendChild(c);
+    }
+  }
+
+  function makeFireworks(){
+    const points = [
+      [14, 20], [82, 18], [26, 70], [74, 68], [50, 24], [10, 56], [90, 54]
+    ];
+    points.forEach((point, idx) => {
+      const fw = document.createElement('div');
+      fw.className = 'firework';
+      fw.style.left = point[0] + '%';
+      fw.style.top = point[1] + '%';
+      fw.style.animationDelay = (idx * .16) + 's';
+      overlay.appendChild(fw);
+    });
+  }
+
+  updateProgress();
+</script>
+</body>
+</html>
