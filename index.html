@@ -1010,5 +1010,16 @@
 
   updateProgress();
 </script>
+  <script>
+  const params = new URLSearchParams(window.location.search);
+
+  if (!params.has('owner')) {
+    const gc = document.createElement('script');
+    gc.setAttribute('data-goatcounter', 'https://robertmarton.goatcounter.com/count');
+    gc.async = true;
+    gc.src = 'https://gc.zgo.at/count.js';
+    document.body.appendChild(gc);
+  }
+</script>
 </body>
 </html>
